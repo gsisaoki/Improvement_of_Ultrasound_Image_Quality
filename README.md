@@ -1,12 +1,4 @@
-<div align="center">
-  <table>
-    <tr>
-      <td>
-        <img class="img-fluid" src="figure/thumbnail.jpg" alt="...">
-      </td>
-    </tr>
-  </table>
-</div>
+<img src="figure/thumbnail.jpg">
 
 # Image Quality Improvement in Single Plane-Wave Imaging Using Deep Learning
 
