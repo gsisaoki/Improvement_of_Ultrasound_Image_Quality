@@ -1,0 +1,48 @@
+seed: 20
+# checkpoint_path: False
+checkpoint_path: '/home/jaxa/shidara/PWI/model/ultrasonics/2023-06-16_train_Unet1D2D_1D_IQ_2D_IQ_loss_tuning_params/best.pth.tar'
+model: unet1D2D_featuremap
+datatype: rf
+channel: 2
+mix: False
+date: 20230118
+breast_scan:
+  train: 28
+  val: 4
+  test: 8
+eval_scan:
+  train: ['11', '12', '13', '14']
+  val: []
+  test: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+invivo_scan:
+  train: ['2', '3', '4', '5', '6']
+  val: ['8', '10']
+  test: ['1', '7', '9']
+  
+network:
+  pretrained: True
+  is_bn: False
+  is_dropout: True
+train:
+  # Fixed 
+  epochs: 300
+  optimizer: adamw
+  lr: 0.0001
+  weight_decay: 0
+  batch_size: 16
+  mode: Unet
+  is_l1: True
+  is_l2: False
+  
+  # Experiment
+  is_loss_image: False
+  is_loss_iq: True
+  is_loss_rf: False
+  is_loss_fourier: False
+  alpha_amp: 0
+  alpha_phase: 0
+  beta_IQ_Fourier: 0
+  is_loss_lpips: False
+  lpips_net: vgg
+
+  is_loss_featuremap: True
