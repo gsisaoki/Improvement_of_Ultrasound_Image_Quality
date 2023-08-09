@@ -51,7 +51,7 @@ You can use "Evaluate" class included in [utils.py](./utils.py) to evaluate the 
 
 The trained model of the proposed method is available from the link below.
 
-[Google Drive](https://drive.google.com/file/d/1SQVKYeT9GFGpYGN_s7HcObTpIcdgpqlT/view?usp=drive_link)(375MB)
+[Google Drive](https://drive.google.com/file/d/1i5k8pl41aun3r3ihA79fIxEJeKdkiPLp/view?usp=drive_link)(375MB)
 
 ## Usage
 1. Rewrite root_path (absolute path to src, line 83) and dataset_path (absolute path to downloaded dataset, line 80) in [main.py](./main.py).
