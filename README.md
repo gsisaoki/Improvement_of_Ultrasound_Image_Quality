@@ -50,7 +50,7 @@ You can use "Evaluate" class included in [utils.py](./utils.py) to evaluate the 
 ## Trained models
 The trained model of each method is available from the link below.
 
-- Li et al.'s method: [Google Drive](https://drive.google.com/file/d/1cM3SAETD2We14dlFojw6eAHMmlgQQm-V/view?usp=sharing) (153MB)
+- Li et al.'s method[^2]: [Google Drive](https://drive.google.com/file/d/1cM3SAETD2We14dlFojw6eAHMmlgQQm-V/view?usp=sharing) (153MB)
 
 - 1D U-Net: [Google Drive](https://drive.google.com/file/d/14ThMXJwG1tyJHrZcN1hpOcVu58LXjyv6/view?usp=sharing) (96MB)
 
@@ -72,3 +72,4 @@ The trained model of each method is available from the link below.
 
 ## References
 [^1]: O. Ronneberger, P. Fischer, and T. Brox, "U-Net: Convolutional networks for biomedical image segmentation," Proc. Int'l Conf. Medical Image Computing and Computer Assisted Intervention, Springer, LNCS, vol. 9351, pp. 234--241, Oct. 2015.
+[^2]: Z. Li, A. Wiacek, and M. Bell, “Beamforming with deep learning from single plane wave RF data,” Proc. IEEE Int’l. Ultrasonics Symposium, pp. 1-4, Sep. 2020.
