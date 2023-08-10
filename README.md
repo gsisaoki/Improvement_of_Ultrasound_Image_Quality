@@ -48,10 +48,17 @@ Our original labels obtained by annotation are included in [coord.json](./coord.
 You can use "Evaluate" class included in [utils.py](./utils.py) to evaluate the quality of ultrasound images.
 
 ## Trained models
+The trained model of each method is available from the link below.
 
-The trained model of the proposed method is available from the link below.
+- 1D U-Net
+[Google Drive](https://drive.google.com/file/d/14ThMXJwG1tyJHrZcN1hpOcVu58LXjyv6/view?usp=drive_link) (96MB)
 
-[Google Drive](https://drive.google.com/file/d/1i5k8pl41aun3r3ihA79fIxEJeKdkiPLp/view?usp=drive_link)(375MB)
+- 2D U-Net
+[Google Drive](https://drive.google.com/file/d/1pg47XUWWA1iEgsa1GzORKJQYDfn0K0cc/view?usp=drive_link) (278MB)
+
+- Proposed method
+[Google Drive](https://drive.google.com/file/d/1i5k8pl41aun3r3ihA79fIxEJeKdkiPLp/view?usp=drive_link) (375MB)
+
 
 ## Usage
 1. Rewrite root_path (absolute path to src, line 83) and dataset_path (absolute path to downloaded dataset, line 80) in [main.py](./main.py).
