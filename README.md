@@ -50,21 +50,13 @@ You can use "Evaluate" class included in [utils.py](./utils.py) to evaluate the 
 ## Trained models
 The trained model of each method is available from the link below.
 
-- Li et al.'s method
+- Li et al.'s method: [Google Drive](https://drive.google.com/file/d/1cM3SAETD2We14dlFojw6eAHMmlgQQm-V/view?usp=sharing) (153MB)
 
-[Google Drive](https://drive.google.com/file/d/1cM3SAETD2We14dlFojw6eAHMmlgQQm-V/view?usp=sharing) (153MB)
+- 1D U-Net: [Google Drive](https://drive.google.com/file/d/14ThMXJwG1tyJHrZcN1hpOcVu58LXjyv6/view?usp=sharing) (96MB)
 
-- 1D U-Net
+- 2D U-Net: [Google Drive](https://drive.google.com/file/d/1pg47XUWWA1iEgsa1GzORKJQYDfn0K0cc/view?usp=sharing) (278MB)
 
-[Google Drive](https://drive.google.com/file/d/14ThMXJwG1tyJHrZcN1hpOcVu58LXjyv6/view?usp=sharing) (96MB)
-
-- 2D U-Net
-
-[Google Drive](https://drive.google.com/file/d/1pg47XUWWA1iEgsa1GzORKJQYDfn0K0cc/view?usp=sharing) (278MB)
-
-- Proposed method
-
-[Google Drive](https://drive.google.com/file/d/1i5k8pl41aun3r3ihA79fIxEJeKdkiPLp/view?usp=sharing) (375MB)
+- Proposed method: [Google Drive](https://drive.google.com/file/d/1i5k8pl41aun3r3ihA79fIxEJeKdkiPLp/view?usp=sharing) (375MB)
 
 ## Usage
 1. Rewrite root_path (absolute path to src, line 83) and dataset_path (absolute path to downloaded dataset, line 80) in [main.py](./main.py).
