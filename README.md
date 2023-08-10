@@ -4,7 +4,7 @@
 
 ## Introduction
 &nbsp;&nbsp;&nbsp;We propose a method to improve the image quality of ultrasound image acquired with a single plane wave in single plane-wave imaging.
-The proposed method employs the encoder-decoder model combining 1D U-Net and 2D U-Net[^1] to consider that the point spread function of RF signals in the lateral direction varies with depth.
+The proposed method employs the encoder-decoder model combining 1D U-Net and 2D U-Net [^1] to consider that the point spread function of RF signals in the lateral direction varies with depth.
 The encoder-decoder model is trained using the frequency loss considering amplitude and phase obtained by 1D discrete Fourier transform of the RF signal in the axial direction.
 For more details, please refer to [our paper](https://github.com/gsisaoki/Improvement_of_Ultrasound_Image_Quality).
 
@@ -73,4 +73,4 @@ The trained model of each method is available from the link below.
 4. If you want to test **your own trained models**, set the 'checkpoint_path' in 'test.yaml' file in [yaml](./yaml) to the path of the saved model in 'USPose/result/' directory and run the above command.
 
 ## References
-[^1]O. Ronneberger, P. Fischer, and T. Brox, "U-Net: Convolutional networks for biomedical image segmentation," Proc. Int'l Conf. Medical Image Computing and Computer Assisted Intervention, Springer, LNCS, vol. 9351, pp. 234--241, Oct. 2015.
+[^1]: O. Ronneberger, P. Fischer, and T. Brox, "U-Net: Convolutional networks for biomedical image segmentation," Proc. Int'l Conf. Medical Image Computing and Computer Assisted Intervention, Springer, LNCS, vol. 9351, pp. 234--241, Oct. 2015.
