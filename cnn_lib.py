@@ -6,7 +6,6 @@ import yaml
 import shutil
 import datetime
 import random
-import slackweb
 import pandas as pd
 
 from utils import *
@@ -20,7 +19,7 @@ def load_yaml(root_path, yaml_file):
     Return:
         dic: Setting arguments
     """
-    with open(os.path.join(root_path, 'src_will_be_released', 'yaml', yaml_file), 'r') as stream:
+    with open(os.path.join(root_path, 'src', 'yaml', yaml_file), 'r') as stream:
         cfgs = yaml.load(stream, Loader=yaml.SafeLoader)
     return cfgs
 
@@ -64,15 +63,6 @@ def get_expname(name):
         str: date_name
     """
     return str(datetime.date.today()) + '_' + name
-
-def slack():
-    """Set slack API
-    Returns:
-        obj: slack API
-    Note:
-    """
-    webhook_url = ''
-    return slackweb.Slack(url=webhook_url)
 
 def prepare_exp_dir(cfgs):
     """Prepare dir

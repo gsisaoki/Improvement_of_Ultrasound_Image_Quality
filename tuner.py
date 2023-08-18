@@ -8,14 +8,10 @@ import matplotlib
 matplotlib.use('Agg')
 from tensorboardX import SummaryWriter
 from tqdm import tqdm
-import time
-import random
-import math
 import json
 from torchmetrics import PeakSignalNoiseRatio, StructuralSimilarityIndexMeasure
 from torchmetrics.functional import peak_signal_noise_ratio
 
-import pytorch_ssim
 from cnn_lib import *
 from criterion.criterion import *
 from utils import *
@@ -70,15 +66,14 @@ class Tuner(object):
         # Set tensorboard
         self.writer = SummaryWriter(os.path.join(cfgs['root_path'], 'log', cfgs['target'], cfgs['exp_name']))
 
-        # self.metric_list = ['loss']
         self.metric_list = ['loss', 'pred_ssim', 'pred_psnr', 'pred_lpips', 'input_ssim', 'input_psnr', 'input_lpips']
 
     def main(self, trainloader, valloader):
-        trial_size = 1000   # 試行回数
-        trial_epochs = 25  # 試行あたりのエポック数
-        # 探索の実行
-        study = optuna.create_study()  # Studyオブジェクトの生成
-        tuner = self.Tuning(trainloader, valloader, trial_epochs)  # 目的関数生成
+        trial_size = 1000   
+        trial_epochs = 25  
+        
+        study = optuna.create_study()  
+        tuner = self.Tuning(trainloader, valloader, trial_epochs)
         study.optimize(tuner, n_trials=trial_size, callbacks=[self.save])
         print(f"Best Object Value : {study.best_value}")
         print(f"Best Parameters : {study.best_params}")
@@ -88,10 +83,10 @@ class Tuner(object):
             print('Start Tuning...')
             self.net = select_model(self.cfgs).to(self.device)
             self.optimizer = select_optimizer(self.net, self.cfgs)
-            alpha_amp = self.alpha_amp
-            alpha_phase = self.alpha_pahse
-            beta_Envelope = trial.suggest_float('beta_Envelope', 0.1, 3)
-            beta_Fourier = trial.suggest_float('beta_Fourier', 0.1, 10)
+            alpha_amp = trial.suggest_float('alpha_amp', 0, 0)
+            alpha_phase = trial.suggest_float('alpha_phase', 0, 0)
+            beta_Envelope = trial.suggest_float('beta_Envelope', 0, 0)
+            beta_Fourier = trial.suggest_float('beta_Fourier', 0, 0)
 
             meter_list = [AverageMeter(meter) for meter in self.metric_list]
             progress = ProgressMeter(traial_epochs, meter_list, prefix='Training: ')
@@ -141,7 +136,6 @@ class Tuner(object):
             for metric, meter in zip(self.metric_list, meter_list):
                 meter.update(results[metric] / results['iter'])
             progress.display(1)
-        # self.error_df = write_df(self.error_df, results['loss'])
         self.error_df = write_df(self.error_df, results['loss'], results['pred_ssim'] / results['iter'], results['pred_psnr'] / results['iter'], results['pred_lpips'] / results['iter'], results['input_ssim'] / results['iter'], results['input_psnr'] / results['iter'], results['input_lpips'] / results['iter'])
         save_df(os.path.join(self.cfgs['root_path'], 'result', self.cfgs['target'], self.cfgs['exp_name'], datatype + '_error.csv'), self.error_df)
         print('End Evaluation...')
@@ -152,7 +146,6 @@ class Tuner(object):
         else:
             self.net.eval()
         print('Start Iteration...')
-        # results = dict(iter=0, loss=0)
         results = dict(iter=0, loss=0, pred_ssim=0, pred_psnr=0, pred_lpips=0,input_ssim=0, input_psnr=0, input_lpips=0)
         loss_list = dict(loss=0, loss_iq=0, loss_rf=0, rf_envelope_loss=0, rf_phase_loss=0, loss_fourier=0, fourier_amp_loss=0, fourier_phase_loss=0, iteration=0, lpips_loss = 0)
         image_paths = []
@@ -231,5 +224,5 @@ class Tuner(object):
         return results
     
     def save(self, study, frozen_trial):
-        tuning_log = study.trials_dataframe()                    # ハイパーパラメータの設定値と評価値をDataFrameで取得
-        tuning_log.to_csv(os.path.join(self.save_path, 'tuning_log.csv'), sep='\t', index=None)  # DataFrameをcsv形式で保存
+        tuning_log = study.trials_dataframe()
+        tuning_log.to_csv(os.path.join(self.save_path, 'tuning_log.csv'), sep='\t', index=None)

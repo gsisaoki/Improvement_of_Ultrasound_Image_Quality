@@ -5,32 +5,32 @@ from torchvision import transforms
 import glob
 from PIL import Image
 import random
-from tqdm import tqdm
 from scipy import io
 
 
 class UltrasoundDataset(torch.utils.data.Dataset):
     def __init__(self, mode, cfgs, phantom = 'all'):
+        self.dataset_path = cfgs['dataset_path']
         self.mode = mode
         self.datatype = cfgs['datatype']
         data_list = cfgs[mode + '_list']
         self.mat_files = []
         #Breastphantom
-        if phantom == 'all' or phantom == 'breast':
+        if phantom == 'all' or phantom == 'bp':
             for data in data_list:
-                scan_dir = os.path.join('/home/jaxa/Datasets/PlaneWaveImaging', str(cfgs['date']), 'Breastfan/IQdata', '{0:04}'.format(data + 1))
+                scan_dir = os.path.join(self.dataset_path, 'BP/IQdata', '{0:04}'.format(data + 1))
                 self.mat_files.extend(sorted(glob.glob(os.path.join(scan_dir, '*'))))
         # #Evalphantom
-        if phantom == 'all' or phantom == 'eval':
-            eval_data_list = cfgs['eval_scan'][mode]
+        if phantom == 'all' or phantom == 'qap':
+            eval_data_list = cfgs['qap_scan'][mode]
             for eval_data in eval_data_list:
-                scan_dir = os.path.join('/home/jaxa/Datasets/PlaneWaveImaging', str(cfgs['date']), 'Evalfan/IQdata', '{0:04}'.format(int(eval_data)))
+                scan_dir = os.path.join(self.dataset_path, 'QAP/IQdata', '{0:04}'.format(int(eval_data)))
                 self.mat_files.extend(sorted(glob.glob(os.path.join(scan_dir, '*'))))
         #invivo
         if phantom == 'all' or phantom == 'invivo':
             invivo_data_list = cfgs['invivo_scan'][mode]
             for invivo_data in invivo_data_list:
-                scan_dir = os.path.join('/home/jaxa/Datasets/PlaneWaveImaging', str(cfgs['date']), 'invivo/IQdata', '{0:04}'.format(int(invivo_data)))
+                scan_dir = os.path.join(self.dataset_path, 'invivo/IQdata', '{0:04}'.format(int(invivo_data)))
                 self.mat_files.extend(sorted(glob.glob(os.path.join(scan_dir, '*'))))     
 
     def __getitem__(self, idx):
@@ -72,8 +72,9 @@ class UltrasoundDataset(torch.utils.data.Dataset):
 
 class PICMUSDataset(torch.utils.data.Dataset):
     def __init__(self, cfgs):
+        self.dataset_path = cfgs['dataset_path']
         self.mat_files = []
-        self.mat_files.extend(sorted(glob.glob(os.path.join('/home/jaxa/Datasets/PlaneWaveImaging/PICMUS', '*'))))
+        self.mat_files.extend(sorted(glob.glob(os.path.join(self.dataset_path, 'PICMUS', '*'))))
 
     def __getitem__(self, idx):
         mat_file = self.mat_files[idx]

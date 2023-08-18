@@ -1,16 +1,13 @@
 import numpy as np
 import pandas as pd
 from torchvision import transforms
-from torchsummary import summary
 import torch
 import glob
 import os
 import cv2
 from PIL import Image
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 from scipy.interpolate import interp1d
-from scipy import integrate
 import h5py
 
 import models.conventional.Li as Li
@@ -166,8 +163,8 @@ class Evaluate():
         self.save_image()
         self.save_envelope_hist()
         
-        if phantom == 'eval':
-            coord_info = self.eval_info[image_path]
+        if phantom == 'qap':
+            coord_info = self.eval_info[os.path.join('/', image_path.split('/')[-4], image_path.split('/')[-3], image_path.split('/')[-2], image_path.split('/')[-1])]
             if dataset_id in ['0001', '0002', '0003', '0004', '0009', '0010']:
                 # self.save_plot_image(coord_info[0])
                 input_lateral_fwhm, gt_lateral_fwhm, pred_lateral_fwhm, input_axial_fwhm, gt_axial_fwhm, pred_axial_fwhm = self.plot_spreadfunc(coord_info[0])
@@ -639,6 +636,7 @@ class Evaluate():
 
 class PICMUS_Evaluate():
     def __init__(self, cfgs, save_path):
+        self.PICMUS_hdf5_path = cfgs['PICMUS_hdf5_path']
         self.cfgs = cfgs
         self.datatype = cfgs['datatype']
         self.save_path = save_path
@@ -687,22 +685,22 @@ class PICMUS_Evaluate():
     def transform2image(self, input, raw_data, datatype):
         if self.image_path.split('/')[-1].split('_')[0] == 'contrast':
             if self.image_path.split('/')[-1].split('_')[-1] == 'simu':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/contrast_speckle/contrast_speckle_simu_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/contrast_speckle/contrast_speckle_simu_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/contrast_speckle/contrast_speckle_simu_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/contrast_speckle/contrast_speckle_simu_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/contrast_speckle/contrast_speckle_simu_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/contrast_speckle/contrast_speckle_simu_scan.hdf5'), "r")["US"]["US_DATASET0000"]
             elif self.image_path.split('/')[-1].split('_')[-1] == 'expe':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/contrast_speckle/contrast_speckle_expe_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/contrast_speckle/contrast_speckle_expe_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5'), "r")["US"]["US_DATASET0000"]
         elif self.image_path.split('/')[-1].split('_')[0] == 'resolution':
             if self.image_path.split('/')[-1].split('_')[-1] == 'simu':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/resolution_distorsion/resolution_distorsion_simu_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/resolution_distorsion/resolution_distorsion_simu_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/resolution_distorsion/resolution_distorsion_simu_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/resolution_distorsion/resolution_distorsion_simu_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/resolution_distorsion/resolution_distorsion_simu_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/resolution_distorsion/resolution_distorsion_simu_scan.hdf5'), "r")["US"]["US_DATASET0000"]
             elif self.image_path.split('/')[-1].split('_')[-1] == 'expe':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/resolution_distorsion/resolution_distorsion_expe_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/resolution_distorsion/resolution_distorsion_expe_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/resolution_distorsion/resolution_distorsion_expe_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/resolution_distorsion/resolution_distorsion_expe_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/resolution_distorsion/resolution_distorsion_expe_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/resolution_distorsion/resolution_distorsion_expe_scan.hdf5'), "r")["US"]["US_DATASET0000"]
         ss = np.array(f["sound_speed"],dtype = "float32")
         mf = np.array(f["modulation_frequency"],dtype = "float32")
         ele_pos = np.array(f["probe_geometry"])
@@ -767,13 +765,13 @@ class PICMUS_Evaluate():
         coord_info = []
         if dataset_id.split('_')[0] == 'contrast':
             if dataset_id.split('_')[-1] == 'simu':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/contrast_speckle/contrast_speckle_simu_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/contrast_speckle/contrast_speckle_simu_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/contrast_speckle/contrast_speckle_simu_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/contrast_speckle/contrast_speckle_simu_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/contrast_speckle/contrast_speckle_simu_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/contrast_speckle/contrast_speckle_simu_scan.hdf5'), "r")["US"]["US_DATASET0000"]
             elif dataset_id.split('_')[-1] == 'expe':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/contrast_speckle/contrast_speckle_expe_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/contrast_speckle/contrast_speckle_expe_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5'), "r")["US"]["US_DATASET0000"]
             ss = np.array(f["sound_speed"],dtype = "float32")
             sf = np.array(f["sampling_frequency"],dtype = "float32")
             mf = np.array(f["modulation_frequency"],dtype = "float32")
@@ -805,13 +803,13 @@ class PICMUS_Evaluate():
             coord_info.append(coord_list)
         elif dataset_id.split('_')[0] == 'resolution':
             if dataset_id.split('_')[-1] == 'simu':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/resolution_distorsion/resolution_distorsion_simu_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/resolution_distorsion/resolution_distorsion_simu_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/simulation/resolution_distorsion/resolution_distorsion_simu_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/resolution_distorsion/resolution_distorsion_simu_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/resolution_distorsion/resolution_distorsion_simu_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/simulation/resolution_distorsion/resolution_distorsion_simu_scan.hdf5'), "r")["US"]["US_DATASET0000"]
             elif dataset_id.split('_')[-1] == 'expe':
-                f = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/resolution_distorsion/resolution_distorsion_expe_dataset_iq.hdf5', "r")["US"]["US_DATASET0000"]
-                fp = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/resolution_distorsion/resolution_distorsion_expe_phantom.hdf5', "r")["US"]["US_DATASET0000"]
-                fs = h5py.File('/home/jaxa/shidara/PWI/src/PICMUS/archive_to_download/database/experiments/resolution_distorsion/resolution_distorsion_expe_scan.hdf5', "r")["US"]["US_DATASET0000"]
+                f = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/resolution_distorsion/resolution_distorsion_expe_dataset_iq.hdf5'), "r")["US"]["US_DATASET0000"]
+                fp = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/resolution_distorsion/resolution_distorsion_expe_phantom.hdf5'), "r")["US"]["US_DATASET0000"]
+                fs = h5py.File(os.path.join(self.PICMUS_hdf5_path, 'database/experiments/resolution_distorsion/resolution_distorsion_expe_scan.hdf5'), "r")["US"]["US_DATASET0000"]
             ss = np.array(f["sound_speed"],dtype = "float32")
             sf = np.array(f["sampling_frequency"],dtype = "float32")
             mf = np.array(f["modulation_frequency"],dtype = "float32")

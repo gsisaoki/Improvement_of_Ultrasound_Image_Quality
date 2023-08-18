@@ -77,7 +77,7 @@ The trained model of each method is available from the link below.
 - Proposed method: [Google Drive](https://drive.google.com/file/d/1i5k8pl41aun3r3ihA79fIxEJeKdkiPLp/view?usp=sharing) (375MB)
 
 ## Usage
-1. Rewrite root_path (absolute path to src, line 83) and dataset_path (absolute path to downloaded dataset, line 80) in [main.py](./main.py).
+1. Rewrite root_path (absolute path to src, line 83), dataset_path (absolute path to downloaded dataset, line 84), and PICMUS_hdf5_path (PICMUS path, line 85) in [main.py](./main.py).
 2. If you want to train CNN using GPU under same conditions as in our paper , run the following command. In order to change the experimental conditions, rewrite the respective 'train.yaml' file in [yaml](./yaml).  
 
     `sh exp/train.sh`

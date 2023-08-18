@@ -13,11 +13,9 @@ import random
 import math
 import json
 from torchmetrics import PeakSignalNoiseRatio, StructuralSimilarityIndexMeasure
-from torchmetrics.functional import peak_signal_noise_ratio
 from PIL import Image
 import pandas as pd
 
-import pytorch_ssim
 from cnn_lib import *
 from criterion.criterion import *
 from utils import *
@@ -170,6 +168,13 @@ class Solver(object):
                     loss.backward()
                     self.optimizer.step()
 
+                if phase == 'test' or  phase == 'PICMUS':
+                    ssim_func = StructuralSimilarityIndexMeasure()
+                    psnr_func = PeakSignalNoiseRatio()
+                    lpips_func = LearnedPerceptualImagePatchSimilarity(net_type='vgg', normalize = True).cuda(self.cfgs['device'])
+                    pred_lpips = lpips_func(stack_image(transform2image(gt[:,0,:,:], raw_data, 'rf_real'), transform2image(torch.squeeze(pred), raw_data, 'rf_real'))).item()
+                    input_lpips = lpips_func(stack_image(transform2image(gt[:,0,:,:], raw_data, 'rf_real'), transform2image(input[:,0,:,:], raw_data, 'rf_real'))).item()
+
                 input, gt, pred, raw_data = input.detach().cpu(), gt.detach().cpu(), pred.detach().cpu(), raw_data.detach().cpu()
               
                 if phase == 'test':
@@ -299,7 +304,7 @@ class Solver(object):
         self.writer.add_scalar(phase + '/' + 'epoch_fourier_phase_loss', loss_list['fourier_phase_loss'] / len(dataloader), epoch)
         self.writer.add_scalar(phase + '/' + 'epoch_fourier_phase_loss', loss_list['lpips_loss'] / len(dataloader), epoch)
 
-        if phase == 'test' and phantom == 'eval':
+        if phase == 'test' and phantom == 'qap':
             evaluater.summary_result()
         elif phase == 'PICMUS':
             PICMUS_evaluater.summary_result()
