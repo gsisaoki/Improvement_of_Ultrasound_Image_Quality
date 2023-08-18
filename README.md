@@ -80,13 +80,13 @@ The trained model of each method is available from the link below.
 1. Rewrite root_path (absolute path to src, line 83), dataset_path (absolute path to downloaded dataset, line 84), and PICMUS_hdf5_path (PICMUS path, line 85) in [main.py](./main.py).
 2. If you want to train CNN using GPU under same conditions as in our paper , run the following command. In order to change the experimental conditions, rewrite the respective 'train.yaml' file in [yaml](./yaml).  
 
-    `sh exp/train.sh`
+    `python main.py -m train -y train.yml -t experiment -e train`
 
 3. If you want to test **our trained models**, you need to download the trained model. Set the 'checkpoint_path' in 'test.yaml' file in [yaml](./yaml) to the path of the downloaed model and run the following command.
 
-    `sh exp/eval.sh`
+    `python main.py -m test -y test.yml -t experiment -e eval`
 
-4. If you want to test **your own trained models**, set the 'checkpoint_path' in 'test.yaml' file in [yaml](./yaml) to the path of the saved model in 'USPose/result/' directory and run the above command.
+4. If you want to test **your own trained models**, set the 'checkpoint_path' in 'test.yaml' file in [yaml](./yaml) to the path of the saved model in 'PlaneWaveImaging/model/' directory and run the above command.
 
 ## References
 [^1]: O. Ronneberger, P. Fischer, and T. Brox, "U-Net: Convolutional networks for biomedical image segmentation," Proc. Int'l Conf. Medical Image Computing and Computer Assisted Intervention, Springer, LNCS, vol. 9351, pp. 234--241, Oct. 2015.
