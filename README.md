@@ -19,10 +19,8 @@ This repository contains the following used for the results in our paper:
 
 Run the following commands to easily train or test the proposed method,
 ```
-conda create -n env python=3.9
-conda activate env
-conda install pytorch==1.10.0 torchvision==0.11.0 torchaudio==0.10.0 cudatoolkit=11.3 -c pytorch
-pip install -r requirements.txt
+conda env create -n {env_name} -f env.yml
+conda activate {env_name}
 ```
 
 ## Preparation
@@ -43,9 +41,29 @@ cd src
 
 ## Dataset
 
-In order to download our dataset, please refer to [our project page]().
+In order to download our dataset, please send an e-mail to <a href="mailto:kanta@aoki.ecei.tohoku.ac.jp">kanta@aoki.ecei.tohoku.ac.jp</a>.<br>
+When we receive the e-mail, we will share the download link.
 Our original labels obtained by annotation are included in [coord.json](./coord.json).
 You can use "Evaluate" class included in [utils.py](./utils.py) to evaluate the quality of ultrasound images.
+
+## Dataset layout
+
+After unzipping the downloaded zip file, you will get directory with the following structure.
+```
+ Dataset.zip
+ ├── BP                          # Directory of the breast ultrasound phantom
+ |   └── {seq_id}_seq
+ |        └── {frame_id}_frame
+ |             ├── rf_real
+ |             |   ├── input.mat # .mat file which contains the real part of the single-plane wave RF data
+ |             |   └── comp.mat  # .mat file which contains the real part of the compounded RF data
+ |             └── rf_imag
+ |                 ├── input.mat # .mat file which contains the imaginary part of the single-plane wave RF data
+ |                 └── comp.mat  # .mat file which contains the imaginary part of the compounded RF data
+ ├── QAP                         # Directory of the ultrasound image assurance phantom
+ |
+ └── Invivo                      # Directory of the healthy subjects
+```
 
 ## Trained models
 The trained model of each method is available from the link below.
